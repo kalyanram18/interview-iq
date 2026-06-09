@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: interviewiq
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: ./server
+    environment:
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@postgres:5432/interviewiq
+      JWT_SECRET_KEY: change-this-long-random-secret
+      AI_PROVIDER: mock
+      CLIENT_ORIGIN: http://localhost:5173
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
